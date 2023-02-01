@@ -1,0 +1,40 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  # 이슈가 생성되거나 수정될 때마다 실행
+  issues:
+    types: [opened, edited]
+    
+  # 매주 월요일 9시 실행
+  # POSIX cron 구문: Minute Hour Day Month Date
+  # https://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html#tag_20_25_07
+  schedule:
+  - cron: "0 9 * * 1"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Run Cronjob
+      run: |
+        yarn
+        yarn start
+    - name: Push Commit to Repository
+      run: |
+        git config --global user.name "dev-song"
+        git config --global user.email "dvlprsong@gmail.com"
+        git pull origin main
+        git add .
+        git commit -m "#noissue chore Update records" || exit 0
+        git push
