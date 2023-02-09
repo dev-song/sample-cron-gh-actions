@@ -27,8 +27,8 @@ function recordNumbers(numbers: Array<string>) {
   const titleText = '# Lottery Result\n';
   const today = new Date();
   const year = today.getFullYear();
-  const month = `${today.getMonth()}`.padStart(2, '0');
-  const day = `${today.getDay()}`.padStart(2, '0');
+  const month = `${today.getMonth() + 1}`.padStart(2, '0');
+  const day = `${today.getDate()}`.padStart(2, '0');
   const todayText = `${today.toLocaleString()}\n`;
   const separator = `---------------------\n`;
   const numbersText = numbers.join('\n');
